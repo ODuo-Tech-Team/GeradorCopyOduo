@@ -37,6 +37,7 @@ yarn-error.log*
 # Next.js
 # ============================================
 frontend/.next/
+frontend/out/
 frontend/build/
 
 # ============================================
