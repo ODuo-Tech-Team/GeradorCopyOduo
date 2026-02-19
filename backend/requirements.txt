@@ -15,8 +15,9 @@ tiktoken>=0.8.0
 # Supabase
 supabase>=2.10.0
 
-# PDF Processing
+# Document Processing
 PyMuPDF>=1.25.0
+python-docx>=0.8.11
 
 # Utilities
 python-multipart>=0.0.20
