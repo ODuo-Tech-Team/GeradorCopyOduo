@@ -1,17 +1,41 @@
 "use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { StatusBadge } from "@/components/shared/status-badge";
+import { apiRequest } from "@/lib/api/client";
+import { API_CONFIG } from "@/config/api";
 import Link from "next/link";
+import { Loader2 } from "lucide-react";
+
+interface HistoryGeneration {
+  id: string;
+  briefing_text: string;
+  niche_id: string | null;
+  vibe_id: string | null;
+  status: string;
+  score: number | null;
+  created_at: string;
+}
 
 export default function HistoryPage() {
-  // Placeholder — integrar com Supabase
-  const generations: Array<{
-    id: string;
-    niche: string;
-    vibe: string;
-    status: string;
-    score: number | null;
-    created_at: string;
-  }> = [];
+  const router = useRouter();
+  const [generations, setGenerations] = useState<HistoryGeneration[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    apiRequest<HistoryGeneration[]>(API_CONFIG.endpoints.history)
+      .then(setGenerations)
+      .catch((err) => console.error("Erro ao buscar histórico:", err))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Loader2 className="h-8 w-8 animate-spin text-zinc-500" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -33,20 +57,26 @@ export default function HistoryPage() {
             <thead className="bg-zinc-900">
               <tr>
                 <th className="px-4 py-3 text-left text-xs text-zinc-500">Data</th>
-                <th className="px-4 py-3 text-left text-xs text-zinc-500">Nicho</th>
-                <th className="px-4 py-3 text-left text-xs text-zinc-500">Vibe</th>
+                <th className="px-4 py-3 text-left text-xs text-zinc-500">Briefing</th>
                 <th className="px-4 py-3 text-left text-xs text-zinc-500">Status</th>
                 <th className="px-4 py-3 text-left text-xs text-zinc-500">Score</th>
               </tr>
             </thead>
             <tbody>
               {generations.map((g) => (
-                <tr key={g.id} className="border-t border-zinc-800 hover:bg-zinc-900/50">
-                  <td className="px-4 py-3 text-sm">{new Date(g.created_at).toLocaleDateString("pt-BR")}</td>
-                  <td className="px-4 py-3 text-sm">{g.niche}</td>
-                  <td className="px-4 py-3 text-sm capitalize">{g.vibe}</td>
+                <tr
+                  key={g.id}
+                  onClick={() => router.push(`/results/${g.id}`)}
+                  className="border-t border-zinc-800 hover:bg-zinc-900/50 cursor-pointer transition-colors"
+                >
+                  <td className="px-4 py-3 text-sm text-zinc-300 whitespace-nowrap">
+                    {new Date(g.created_at).toLocaleDateString("pt-BR")}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-zinc-300 max-w-xs truncate">
+                    {g.briefing_text?.slice(0, 80) ?? "-"}
+                  </td>
                   <td className="px-4 py-3"><StatusBadge status={g.status} /></td>
-                  <td className="px-4 py-3 text-sm">{g.score ?? "-"}/10</td>
+                  <td className="px-4 py-3 text-sm text-zinc-300">{g.score ?? "-"}/10</td>
                 </tr>
               ))}
             </tbody>

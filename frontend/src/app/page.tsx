@@ -1,8 +1,26 @@
+"use client";
+import { useEffect, useState } from "react";
 import { StatsCard } from "@/components/dashboard/stats-card";
 import { Sparkles, Upload } from "lucide-react";
+import { apiRequest } from "@/lib/api/client";
+import { API_CONFIG } from "@/config/api";
 import Link from "next/link";
 
+interface DashboardStats {
+  total_generations: number;
+  total_assets: number;
+  total_winners: number;
+}
+
 export default function DashboardPage() {
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+
+  useEffect(() => {
+    apiRequest<DashboardStats>(API_CONFIG.endpoints.stats)
+      .then(setStats)
+      .catch((err) => console.error("Erro ao buscar stats:", err));
+  }, []);
+
   return (
     <div className="space-y-8">
       <div>
@@ -11,9 +29,9 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatsCard title="Gerações" value={0} description="Total de carrosséis gerados" />
-        <StatsCard title="Assets" value={0} description="PDFs e áudios carregados" />
-        <StatsCard title="Vencedoras" value={0} description="Copys marcadas como top" />
+        <StatsCard title="Gerações" value={stats?.total_generations ?? 0} description="Total de carrosséis gerados" />
+        <StatsCard title="Assets" value={stats?.total_assets ?? 0} description="PDFs e áudios carregados" />
+        <StatsCard title="Vencedoras" value={stats?.total_winners ?? 0} description="Copys marcadas como top" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

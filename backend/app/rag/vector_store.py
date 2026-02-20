@@ -136,3 +136,53 @@ async def save_generation_result(
     resp = await client.post(_rest_url("generations"), headers=_headers(), json=record)
     resp.raise_for_status()
     logger.info(f"Geração salva: {generation_id}")
+
+
+async def list_generations(limit: int = 50, offset: int = 0) -> list[dict]:
+    """Lista gerações ordenadas por data, mais recentes primeiro."""
+    client = await get_client()
+    url = (
+        _rest_url("generations")
+        + f"?select=id,briefing_text,niche_id,vibe_id,status,judge_feedback,created_at"
+        + f"&order=created_at.desc"
+        + f"&limit={limit}&offset={offset}"
+    )
+    resp = await client.get(url, headers=_headers())
+    resp.raise_for_status()
+    return resp.json()
+
+
+async def get_generation_by_id(generation_id: str) -> dict | None:
+    """Busca uma geração completa por ID, incluindo options."""
+    client = await get_client()
+    url = (
+        _rest_url("generations")
+        + f"?select=id,briefing_text,niche_id,vibe_id,status,options,judge_feedback,retry_count,tokens_used,created_at"
+        + f"&id=eq.{generation_id}"
+        + "&limit=1"
+    )
+    resp = await client.get(url, headers=_headers())
+    resp.raise_for_status()
+    data = resp.json()
+    return data[0] if data else None
+
+
+async def get_generation_stats() -> dict:
+    """Retorna contagens para o dashboard."""
+    client = await get_client()
+    count_headers = {**_headers(), "Prefer": "count=exact", "Range-Unit": "items", "Range": "0-0"}
+
+    gen_resp = await client.get(_rest_url("generations") + "?select=id", headers=count_headers)
+    gen_count = int(gen_resp.headers.get("content-range", "*/0").split("/")[-1] or 0)
+
+    assets_resp = await client.get(_rest_url("assets") + "?select=id", headers=count_headers)
+    assets_count = int(assets_resp.headers.get("content-range", "*/0").split("/")[-1] or 0)
+
+    winners_resp = await client.get(_rest_url("winners") + "?select=id", headers=count_headers)
+    winners_count = int(winners_resp.headers.get("content-range", "*/0").split("/")[-1] or 0)
+
+    return {
+        "total_generations": gen_count,
+        "total_assets": assets_count,
+        "total_winners": winners_count,
+    }
