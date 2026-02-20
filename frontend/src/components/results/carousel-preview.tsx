@@ -23,40 +23,43 @@ export function CarouselPreview({ option }: { option: CarouselOptionWithMeta }) 
 
   return (
     <div className={cn(
-      "border-2 rounded-2xl p-6 space-y-6",
+      "border-2 rounded-2xl p-4 md:p-6 space-y-4 md:space-y-6",
       option.isWinner ? "border-green-500 bg-green-500/5" : "border-zinc-700"
     )}>
-      <div className="flex items-center justify-between">
+      <div className="space-y-3 md:space-y-0 md:flex md:items-center md:justify-between">
         <div>
-          <h3 className="text-xl font-bold text-white">
+          <h3 className="text-lg md:text-xl font-bold text-white">
             Opção {option.option_id}
             {option.isWinner && <span className="ml-2 text-green-400 text-sm">Vencedora</span>}
           </h3>
           <p className="text-sm text-zinc-500">Hook: {option.hook_type.replace(/_/g, " ")}</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={handleCopyAll}>
-            {copied ? <Check className="mr-2 h-4 w-4 text-green-400" /> : <Copy className="mr-2 h-4 w-4" />}
+          <Button variant="outline" size="sm" className="text-xs md:text-sm" onClick={handleCopyAll}>
+            {copied ? <Check className="mr-1.5 h-3.5 w-3.5 text-green-400" /> : <Copy className="mr-1.5 h-3.5 w-3.5" />}
             {copied ? "Copiado!" : "Copiar Tudo"}
           </Button>
           <Button
             variant={option.isWinner ? "default" : "outline"}
             size="sm"
+            className="text-xs md:text-sm"
             onClick={() => markAsWinner(option.option_id)}
           >
-            <Trophy className="mr-2 h-4 w-4" />
-            {option.isWinner ? "Vencedora" : "Marcar Vencedora"}
+            <Trophy className="mr-1.5 h-3.5 w-3.5" />
+            <span className="hidden sm:inline">{option.isWinner ? "Vencedora" : "Marcar Vencedora"}</span>
+            <span className="sm:hidden">{option.isWinner ? "Top" : "Marcar"}</span>
           </Button>
         </div>
       </div>
 
       {option.hook_alternatives && option.hook_alternatives.length > 0 && (
-        <div className="bg-zinc-800/50 rounded-xl p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <h4 className="text-sm font-semibold text-amber-400 uppercase tracking-wider">Alternativas de Hook</h4>
+        <div className="bg-zinc-800/50 rounded-xl p-3 md:p-4 space-y-3">
+          <div className="flex items-center justify-between gap-2">
+            <h4 className="text-xs md:text-sm font-semibold text-amber-400 uppercase tracking-wider">Alternativas de Hook</h4>
             <Button
               variant="outline"
               size="sm"
+              className="text-xs shrink-0"
               onClick={() => {
                 const text = option.hook_alternatives
                   .map((alt, i) => `Hook ${i + 1} (${alt.hook_style.replace(/_/g, " ")}): "${alt.hook_text}"`)
@@ -66,8 +69,8 @@ export function CarouselPreview({ option }: { option: CarouselOptionWithMeta }) 
                 setTimeout(() => setHooksCopied(false), 2000);
               }}
             >
-              {hooksCopied ? <Check className="mr-2 h-3 w-3 text-green-400" /> : <Copy className="mr-2 h-3 w-3" />}
-              {hooksCopied ? "Copiado!" : "Copiar Hooks"}
+              {hooksCopied ? <Check className="mr-1.5 h-3 w-3 text-green-400" /> : <Copy className="mr-1.5 h-3 w-3" />}
+              {hooksCopied ? "Copiado!" : "Copiar"}
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -85,7 +88,7 @@ export function CarouselPreview({ option }: { option: CarouselOptionWithMeta }) 
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">
         {option.slides.map((slide) => (
           <SlideCard
             key={slide.slide_number}

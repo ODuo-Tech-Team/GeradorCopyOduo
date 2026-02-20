@@ -26,14 +26,30 @@ export function SlideCard({ slide, onEdit, onReset }: Props) {
   return (
     <div
       className={cn(
-        "relative group border-2 rounded-xl p-5 transition-all min-h-[180px]",
+        "relative group border-2 rounded-xl p-4 md:p-5 transition-all min-h-[160px] md:min-h-[180px]",
         "hover:shadow-lg hover:shadow-zinc-900/50",
         editing ? "border-blue-500" : "border-zinc-700",
         slide.isEdited && "ring-2 ring-yellow-500/50"
       )}
     >
-      <div className={cn("inline-block px-2.5 py-1 rounded-full text-xs font-semibold mb-3 text-white", config.color)}>
-        {slide.slide_number}. {config.label}
+      <div className="flex items-start justify-between gap-2 mb-3">
+        <div className={cn("inline-block px-2.5 py-1 rounded-full text-xs font-semibold text-white", config.color)}>
+          {slide.slide_number}. {config.label}
+        </div>
+        {/* Mobile action buttons - always visible */}
+        <div className="flex gap-1 md:hidden">
+          <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditing(!editing)}>
+            <Pencil className="h-3 w-3" />
+          </Button>
+          <Button size="icon" variant="ghost" className="h-7 w-7" onClick={handleCopy}>
+            {copied ? <Check className="h-3 w-3 text-green-400" /> : <Copy className="h-3 w-3" />}
+          </Button>
+          {slide.isEdited && (
+            <Button size="icon" variant="ghost" className="h-7 w-7" onClick={onReset}>
+              <RotateCcw className="h-3 w-3" />
+            </Button>
+          )}
+        </div>
       </div>
 
       {editing ? (
@@ -62,7 +78,8 @@ export function SlideCard({ slide, onEdit, onReset }: Props) {
         </div>
       )}
 
-      <div className="absolute top-3 right-3 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+      {/* Desktop hover buttons */}
+      <div className="hidden md:flex absolute top-3 right-3 gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
         <Button size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditing(!editing)}>
           <Pencil className="h-3 w-3" />
         </Button>

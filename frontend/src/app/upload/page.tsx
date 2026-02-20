@@ -75,8 +75,8 @@ export default function UploadPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-4xl font-bold text-white">Upload de Material</h1>
-        <p className="text-zinc-500 mt-1">Suba documentos de referência (análises, mapeamentos, estratégias) para a IA usar como base nas copys</p>
+        <h1 className="text-2xl md:text-4xl font-bold text-white">Upload de Material</h1>
+        <p className="text-zinc-500 mt-1 text-sm md:text-base">Suba documentos de referência para a IA usar como base nas copys</p>
       </div>
 
       <div className="max-w-2xl">

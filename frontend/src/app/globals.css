@@ -126,3 +126,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Mobile safe area for bottom nav (iOS notch/home indicator) */
+.safe-area-bottom {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}

@@ -33,23 +33,23 @@ export function FileUploader({ onUpload, isUploading }: Props) {
     <div
       {...getRootProps()}
       className={cn(
-        "border-2 border-dashed rounded-xl p-12 text-center transition-all cursor-pointer",
+        "border-2 border-dashed rounded-xl p-6 md:p-12 text-center transition-all cursor-pointer",
         isDragActive && "border-blue-500 bg-blue-500/10",
         !isDragActive && "border-zinc-700 hover:border-zinc-600",
         isUploading && "opacity-50 cursor-not-allowed"
       )}
     >
       <input {...getInputProps()} />
-      <div className="flex justify-center gap-4 mb-4">
-        <FileText className="h-12 w-12 text-zinc-500" />
-        <Music className="h-12 w-12 text-zinc-500" />
+      <div className="flex justify-center gap-3 md:gap-4 mb-3 md:mb-4">
+        <FileText className="h-8 w-8 md:h-12 md:w-12 text-zinc-500" />
+        <Music className="h-8 w-8 md:h-12 md:w-12 text-zinc-500" />
       </div>
       {isDragActive ? (
-        <p className="text-lg font-medium text-white">Solte os arquivos aqui...</p>
+        <p className="text-base md:text-lg font-medium text-white">Solte os arquivos aqui...</p>
       ) : (
         <>
-          <p className="text-lg font-medium text-zinc-300 mb-2">Arraste seus documentos aqui</p>
-          <p className="text-sm text-zinc-500">Selecione vários de uma vez. Aceito: PDF, DOCX, MP3, WAV, M4A (máx. 50MB cada)</p>
+          <p className="text-base md:text-lg font-medium text-zinc-300 mb-2">Toque para selecionar ou arraste</p>
+          <p className="text-xs md:text-sm text-zinc-500">PDF, DOCX, MP3, WAV, M4A (máx. 50MB cada)</p>
         </>
       )}
       {error && <p className="mt-4 text-sm text-red-500">{error}</p>}

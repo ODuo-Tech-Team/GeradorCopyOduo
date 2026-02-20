@@ -55,8 +55,8 @@ export default function ResultsPage({ params }: { params: Promise<{ id: string }
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-4xl font-bold text-white mb-2">Resultados</h1>
-        <p className="text-zinc-500">3 opções de carrossel geradas. Edite, copie e marque a vencedora.</p>
+        <h1 className="text-2xl md:text-4xl font-bold text-white mb-2">Resultados</h1>
+        <p className="text-zinc-500 text-sm md:text-base">3 opções de carrossel geradas. Edite, copie e marque a vencedora.</p>
       </div>
       <div className="space-y-8">
         {options.map((option) => (
